@@ -21,9 +21,9 @@
 // Add your own #defines here
 
 // Add your own function prototypes here
-static complex complexAdd(complex a, complex b);
-static complex complexSquare(complex a);
-static double complexAbs(complex a);
+complex complexAdd(complex a, complex b);
+complex complexSquare(complex a);
+double complexAbs(complex a);
 
 
 // Draw a single Mandelbrot tile, by calculating and colouring each of
@@ -99,21 +99,21 @@ void escapeGrid(int grid[TILE_SIZE][TILE_SIZE], complex center, int z) {
 }
 
 // Add your own functions here.
-static complex complexAdd(complex a, complex b) {
+complex complexAdd(complex a, complex b) {
     complex value;
     value.re = a.re + b.re;
     value.im = a.im + b.im;
     return value;
 }
 
-static complex complexSquare(complex a) {
+complex complexSquare(complex a) {
     complex value;
     value.re = a.re * a.re - a.im * a.im;
     value.im = 2 * a.re * a.im;
     return value;
 }
 
-static double complexAbs(complex a) {
+double complexAbs(complex a) {
     double absolute;
     absolute = sqrt(a.re * a.re + a.im * a.im);
     return absolute;

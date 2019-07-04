@@ -10,6 +10,9 @@
 #include "mandelbrot.h"
 #include "pixelColor.h"
 
+#include <math.h>
+#include <stdlib.h>
+
 // This function should take a number (of steps taken to escape the
 // Mandelbrot set), and convert it to a color.
 //

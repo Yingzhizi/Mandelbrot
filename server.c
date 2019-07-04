@@ -18,7 +18,7 @@
 
 #define SIMPLE_SERVER_VERSION 3.0
 #define REQUEST_BUFFER_SIZE 1000
-#define DEFAULT_PORT 1511
+#define DEFAULT_PORT 19970
 // after serving this many pages+images the server will halt
 #define NUMBER_OF_PAGES_TO_SERVE 1024
 
@@ -43,6 +43,7 @@ void routeRequest(int socket, char requestBuffer[REQUEST_BUFFER_SIZE]);
 void serveIndex(int socket);
 void sendHtmlHeader(int socket);
 void serveImage(int socket, double x, double y, int z);
+void serveScript(int socket);
 
 // Write an image to output
 void sendBitmapHeader (int socket);
@@ -170,9 +171,14 @@ void routeRequest(int socket, char requestBuffer[REQUEST_BUFFER_SIZE]) {
     int z;
     double x;
     double y;
-    char string[100];
-    sscanf(requestBuffer, "GET /mandelbrot/2/%d/%lf/%lf/tile.bmp%s", &z, &x, &y, string);
-    serveImage(socket, x, y, z);
+    char *string = "GET /mandelbrot/2/%d/%lf/%lf/tile.bmp HTTP/1.1";
+    printf("check\n");
+    if (sscanf(requestBuffer, string, &z, &x, &y) == 3) {
+        serveImage(socket, x, y, z);
+    } else {
+        printf("hi");
+        serveScript(socket);
+    }
 
 }
 
@@ -276,4 +282,12 @@ void sendImage(int socket, pixel pixels[TILE_SIZE][TILE_SIZE]) {
 
     // Send the header
     send (socket, pixelBuffer, pixelData, 0);
+}
+
+void serveScript(int socket) {
+    const char *message = "HTTP/1.0 200 Found\n" "Content-Type: text/html\n" "\n";
+    printf("about to send=> %s\n", message);
+    write (socket, message, strlen(message));
+    message = "<script src=\"http://almondbread.cse.unsw.edu.au/tiles.js\"></script>" "\n";
+    write (socket, message, strlen(message));
 }
